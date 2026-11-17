@@ -263,6 +263,7 @@ def build_server(root: Path) -> MCPServer:
                     problems.append(f"entry lacks fields an existing {kind} entry has: {', '.join(missing)}")
             if not (isinstance(entry.get("source"), dict) and entry["source"].get("ref")):
                 problems.append("entry.source.ref must cite the datasheet (URL, revision, page)")
+            problems += catalog.validate(entry) or []
         plan.equipment = [x for x in plan.equipment if x.role != role] + [e]
         store.save(plan)
         _write_needs(store, plan)

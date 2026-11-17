@@ -115,6 +115,7 @@ def check(plan: Plan, datasheet_text=None) -> dict[str, Any]:
             if nulls:
                 errors.append(f"equipment {e.role} {e.model}: entry has no value for {', '.join(nulls)}; take them from the datasheet")
             errors += [f"equipment {e.role} {e.model}: {p}" for p in sanity(e.kind, e.entry)]
+            errors += [f"equipment {e.role} {e.model}: {p}" for p in catalog.validate(e.entry) or []]
 
     # pages read as images: OCR garbles numbers, and site plans, tables and drawings sit on scans and landscape pages
     for s in plan.sources:

@@ -99,3 +99,16 @@ def example_entry(kind: str) -> dict[str, Any] | None:
     """One existing entry of this kind: the schema a new entry for catalog_add must follow."""
     rows = entries(kind)
     return rows[0] if rows else None
+
+
+def validate(entry: dict[str, Any]) -> list[str] | None:
+    """What UniCAD's catalog_add would reject in this entry (its own check, field by field); None when UniCAD is not installed alongside."""
+    try:
+        from unicad.catalog.store import validate_entry  # type: ignore[import-not-found]
+    except Exception:
+        return None
+    try:
+        validate_entry(entry)
+    except ValueError as exc:
+        return [f"catalog_add would reject the entry: {exc}"]
+    return []
